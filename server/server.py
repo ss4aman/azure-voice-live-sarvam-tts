@@ -19,6 +19,13 @@ app.config["AZURE_USER_ASSIGNED_IDENTITY_CLIENT_ID"] = os.getenv(
     "AZURE_USER_ASSIGNED_IDENTITY_CLIENT_ID", ""
 )
 
+# Sarvam TTS Configuration
+app.config["SARVAM_API_KEY"] = os.getenv("SARVAM_API_KEY", "")
+app.config["SARVAM_SPEAKER"] = os.getenv("SARVAM_SPEAKER", "kavya")
+app.config["SARVAM_TARGET_LANGUAGE"] = os.getenv("SARVAM_TARGET_LANGUAGE", "hi-IN")
+app.config["SARVAM_PACE"] = float(os.getenv("SARVAM_PACE", "1.35"))
+app.config["SARVAM_TEMPERATURE"] = float(os.getenv("SARVAM_TEMPERATURE", "0.7"))
+
 # Ambient Scenes Configuration
 # Options: none, office, call_center (or custom presets)
 app.config["AMBIENT_PRESET"] = os.getenv("AMBIENT_PRESET", "none")
@@ -60,7 +67,14 @@ async def acs_ws():
     logger.info("Incoming ACS WebSocket connection")
     handler = ACSMediaHandler(app.config)
     await handler.init_incoming_websocket(websocket, is_raw_audio=False)
-    asyncio.create_task(handler.connect())
+
+    async def _connect_with_logging():
+        try:
+            await handler.connect()
+        except Exception:
+            logger.exception("CRITICAL: Failed to connect to Voice Live API — no audio will be produced")
+
+    asyncio.create_task(_connect_with_logging())
     try:
         while True:
             msg = await websocket.receive()
@@ -80,7 +94,14 @@ async def web_ws():
     logger.info("Incoming Web WebSocket connection")
     handler = ACSMediaHandler(app.config)
     await handler.init_incoming_websocket(websocket, is_raw_audio=True)
-    asyncio.create_task(handler.connect())
+
+    async def _connect_with_logging():
+        try:
+            await handler.connect()
+        except Exception:
+            logger.exception("CRITICAL: Failed to connect to Voice Live API — no audio will be produced")
+
+    asyncio.create_task(_connect_with_logging())
     try:
         while True:
             msg = await websocket.receive()

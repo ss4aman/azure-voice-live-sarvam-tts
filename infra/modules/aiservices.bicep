@@ -3,6 +3,10 @@ param uniqueSuffix string
 param identityId string
 param tags object
 param disableLocalAuth bool = true
+@description('The model deployment name for Voice Live API')
+param modelName string = 'gpt-4o-mini'
+@description('The OpenAI model version')
+param modelVersion string = '2024-07-18'
 
 // Voice live api only supported on two regions now 
 var location string = 'swedencentral'
@@ -32,6 +36,22 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
     }
     disableLocalAuth: disableLocalAuth
     customSubDomainName: 'domain-${environmentName}-${uniqueSuffix}' 
+  }
+}
+
+resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
+  parent: aiServices
+  name: modelName
+  sku: {
+    name: 'GlobalStandard'
+    capacity: 10
+  }
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: modelName
+      version: modelVersion
+    }
   }
 }
 

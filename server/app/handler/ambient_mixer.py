@@ -174,5 +174,3 @@ class AmbientMixer:
         # Soft clip and convert to int16
         output = self._soft_clip(output)
         return (output * 32767).astype(np.int16).tobytes()
-
-

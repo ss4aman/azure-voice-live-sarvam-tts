@@ -10,6 +10,16 @@ param aiServicesEndpoint string
 param modelDeploymentName string
 param acsConnectionStringSecretUri string
 param logAnalyticsWorkspaceName string
+@description('Sarvam AI API subscription key for TTS')
+param sarvamApiKey string = ''
+@description('Sarvam AI TTS speaker voice name')
+param sarvamSpeaker string = 'kavya'
+@description('Sarvam AI TTS target language code')
+param sarvamTargetLanguage string = 'hi-IN'
+@description('Sarvam AI TTS speech pace')
+param sarvamPace string = '1.35'
+@description('Sarvam AI TTS temperature')
+param sarvamTemperature string = '0.7'
 @description('The name of the container image')
 param imageName string = ''
 
@@ -99,7 +109,27 @@ resource containerApp 'Microsoft.App/containerApps@2024-10-02-preview' = {
             }
             {
               name: 'DEBUG_MODE'
-              value: 'true'
+              value: 'false'
+            }
+            {
+              name: 'SARVAM_API_KEY'
+              value: sarvamApiKey
+            }
+            {
+              name: 'SARVAM_SPEAKER'
+              value: sarvamSpeaker
+            }
+            {
+              name: 'SARVAM_TARGET_LANGUAGE'
+              value: sarvamTargetLanguage
+            }
+            {
+              name: 'SARVAM_PACE'
+              value: sarvamPace
+            }
+            {
+              name: 'SARVAM_TEMPERATURE'
+              value: sarvamTemperature
             }
           ]
           resources: {

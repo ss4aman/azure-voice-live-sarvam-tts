@@ -13,6 +13,21 @@
       },
       "appExists": {
         "value": "${SERVICE_APP_RESOURCE_EXISTS=false}"
+      },
+      "sarvamApiKey": {
+        "value": "${SARVAM_API_KEY}"
+      },
+      "sarvamSpeaker": {
+        "value": "${SARVAM_SPEAKER=kavya}"
+      },
+      "sarvamTargetLanguage": {
+        "value": "${SARVAM_TARGET_LANGUAGE=hi-IN}"
+      },
+      "sarvamPace": {
+        "value": "${SARVAM_PACE=1.35}"
+      },
+      "sarvamTemperature": {
+        "value": "${SARVAM_TEMPERATURE=0.7}"
       }
     }
   }

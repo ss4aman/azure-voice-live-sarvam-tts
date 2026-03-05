@@ -10,6 +10,7 @@ param environmentName string
 @allowed([
   'eastus2'
   'swedencentral'
+  'centralindia'
 ])
 param location string
 
@@ -17,10 +18,20 @@ var abbrs = loadJsonContent('./abbreviations.json')
 param useApplicationInsights bool = true
 param useContainerRegistry bool = true
 param appExists bool
-@description('The OpenAI model name')
-param modelName string = ' gpt-4o-mini'
+@description('The model deployment name for Voice Live API')
+param modelName string = 'gpt-4o-mini'
 @description('Id of the user or app to assign application roles. If ommited will be generated from the user assigned identity.')
 param principalId string = ''
+@description('Sarvam AI API key for TTS')
+param sarvamApiKey string = ''
+@description('Sarvam TTS speaker voice')
+param sarvamSpeaker string = 'kavya'
+@description('Sarvam TTS target language')
+param sarvamTargetLanguage string = 'hi-IN'
+@description('Sarvam TTS speech pace')
+param sarvamPace string = '1.35'
+@description('Sarvam TTS temperature')
+param sarvamTemperature string = '0.7'
 
 var uniqueSuffix = substring(uniqueString(subscription().id, environmentName), 0, 5)
 var tags = {'azd-env-name': environmentName }
@@ -78,6 +89,7 @@ module aiServices 'modules/aiservices.bicep' = {
     uniqueSuffix: uniqueSuffix
     identityId: appIdentity.outputs.identityId
     tags: tags
+    modelName: modelName
   }
   dependsOn: [ appIdentity ]
 }
@@ -133,6 +145,11 @@ module containerapp 'modules/containerapp.bicep' = {
     aiServicesEndpoint: aiServices.outputs.aiServicesEndpoint
     modelDeploymentName: modelName
     acsConnectionStringSecretUri: keyvault.outputs.acsConnectionStringUri
+    sarvamApiKey: sarvamApiKey
+    sarvamSpeaker: sarvamSpeaker
+    sarvamTargetLanguage: sarvamTargetLanguage
+    sarvamPace: sarvamPace
+    sarvamTemperature: sarvamTemperature
     logAnalyticsWorkspaceName: logAnalyticsName
     imageName: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
   }
