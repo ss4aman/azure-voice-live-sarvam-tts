@@ -40,11 +40,11 @@ The key insight: setting `modalities: ["text"]` in the Voice Live session config
 
 ```mermaid
 flowchart LR
-    Caller["Caller\n(Phone / Browser)"]
-    ACS["Azure\nCommunication\nServices"]
+    Caller["Caller (Phone / Browser)"]
+    ACS["Azure Communication Services"]
     App["Container App"]
-    VL["Voice Live API\n(ASR + LLM)"]
-    Sarvam["Sarvam AI\n(TTS)"]
+    VL["Voice Live API (ASR + LLM)"]
+    Sarvam["Sarvam AI (TTS)"]
 
     Caller <-->|"Audio"| ACS <-->|"WebSocket"| App
     App -->|"User Audio"| VL
@@ -63,15 +63,15 @@ flowchart TB
     end
 
     subgraph ACS["Azure Communication Services"]
-        CallAuto["Call Automation\n(Incoming Call Events)"]
-        MediaStream["Media Streaming\n(WebSocket Audio)"]
+        CallAuto["Call Automation (Incoming Call Events)"]
+        MediaStream["Media Streaming (WebSocket Audio)"]
     end
 
     subgraph ContainerApp["Azure Container Apps"]
         Server["Quart Server"]
-        MediaHandler["ACS Media Handler\n(WebSocket Bridge)"]
-        SarvamTTS["Sarvam TTS Client\n(Parallel-Batch Queue)"]
-        AmbientMixer["Ambient Mixer\n(Optional)"]
+        MediaHandler["ACS Media Handler (WebSocket Bridge)"]
+        SarvamTTS["Sarvam TTS Client (Parallel-Batch Queue)"]
+        AmbientMixer["Ambient Mixer (Optional)"]
     end
 
     subgraph VoiceLive["Azure Voice Live API"]
@@ -91,7 +91,7 @@ flowchart TB
     Server --> MediaHandler
     MediaHandler -->|"User Audio (PCM)"| ASR
     ASR -->|"Transcribed Text"| LLM
-    LLM -->|"Text Response\n(modalities=[text])"| MediaHandler
+    LLM -->|"Text Response (modalities=[text])"| MediaHandler
 
     MediaHandler -->|"Queue Text Chunks"| SarvamTTS
     SarvamTTS -->|"Parallel HTTP Calls"| TTS
