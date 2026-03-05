@@ -32,6 +32,8 @@ The key insight: setting `modalities: ["text"]` in the Voice Live session config
 }
 ```
 
+> **Telephony Flexibility:** This sample uses **Azure Communication Services (ACS)** for telephony, but Voice Live API can integrate with **any telephony provider** (e.g., Twilio, Vonage, Genesys, or your own SIP infrastructure). The core pattern — WebSocket audio streaming to Voice Live, text-only responses routed to your TTS — remains the same regardless of the telephony layer.
+
 <br/>
 
 ## Architecture
